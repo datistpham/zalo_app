@@ -22,12 +22,22 @@ const Contact = () => {
   )
   return (
     <View style={{display: "flex", flex: 1}}>
-      <FlatList data={result?.data?.friends} renderItem={({item, index, separators})=> <TouchableHighlight onPress={()=> navigation.navigate("Profile", {username: item.username, idUser: item._id})} underlayColor={"#e7e7e7"}>
-        <View key={index} style={{display: "flex", padding: 16, alignItems: 'center', flexDirection: 'row', backgroundColor: "#fff"}}>
-          <Image style={{width: 50, height: 50, borderRadius: 25, backgroundColor: "#d9d9d9"}} source={{uri: item?.profilePicture}} />
-          <Text style={{fontSize: 18, marginLeft: 12}}>{item.username}</Text>
+      {
+        result?.data?.friends?.length > 0 && 
+        <FlatList data={result?.data?.friends} renderItem={({item, index, separators})=> <TouchableHighlight onPress={()=> navigation.navigate("Profile", {username: item.username, idUser: item._id})} underlayColor={"#e7e7e7"}>
+          <View key={index} style={{display: "flex", padding: 16, alignItems: 'center', flexDirection: 'row', backgroundColor: "#fff"}}>
+            <Image style={{width: 50, height: 50, borderRadius: 25, backgroundColor: "#d9d9d9"}} source={{uri: item?.profilePicture}} />
+            <Text style={{fontSize: 18, marginLeft: 12}}>{item.username}</Text>
+          </View>
+        </TouchableHighlight>} />
+      }
+      {
+        result?.data?.friends?.length <= 0 && 
+        <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Text style={{fontSize: 18, marginTop: 12}}>Không có bạn bè</Text>
         </View>
-      </TouchableHighlight>} />
+      }
+
     </View>
   )
 }

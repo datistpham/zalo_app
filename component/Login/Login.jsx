@@ -1,23 +1,27 @@
 import React, { useContext, useState } from 'react'
 import { Button, Text, TextInput, View } from 'react-native'
 import Background from '../Background/Background'
-import { useFonts } from 'expo-font';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import { AuthContext } from '../AuthContainer/AuthContainer';
 import login from '../../api/login';
 import { useNavigation } from '@react-navigation/native';
+import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 
 const Login = () => {
   const navigation= useNavigation()
   const {setData, setAuth }= useContext(AuthContext)
   const [phoneNumber, setPhoneNumber]= useState("")
   const [password, setPassword]= useState("")
-
+  const [isLogin, setIsLogin]= useState(false)
+  const [dataLogin, setDataLogin]= useState()
+  const closePopup= ()=> {
+    setIsLogin(false)
+  }
   return (
     <View style={{flex: 1, display: "flex", justifyContent: "center", alignItems: "center", position: "relative"}}>
       <Background />
       <View style={{width: "100%", padding: 10, marginTop: 12}}>
-        <Text style={{textAlign: "center", marginBottom: 8, fontFamily: "Roboto", fontSize: 24}}>Đăng nhập tài khoản zalo</Text>
+        <Text style={{textAlign: "center", marginBottom: 8, fontFamily: "Roboto", fontSize: 24}}>Đăng nhập tài khoản tin nhăn nhanh</Text>
         <Text style={{textAlign: "center", marginBottom: 16, fontFamily: "Roboto", fontSize: 24}}>để kết nối với ứng dụng</Text>
         <View style={{width: '100%', backgroundColor: "#fff", borderRadius: 10}}>
           <View style={{width: "100%", padding: 10, backgroundColor: "#fff", borderRadius: 10, position: "relative", marginBottom: 12}}>
@@ -29,7 +33,17 @@ const Login = () => {
             <Icons name={"lock"} size={18} style={{position: "absolute", top: 25, left: 20}} />
           </View>
           <View style={{padding: 10}}>
-            <Button onPress={()=> login(phoneNumber, password, setData, setAuth, navigation)} title={"Đăng nhập"} />
+            <Button onPress={async ()=> {
+              const result= await login(phoneNumber, password, setData, setAuth)
+              
+              if(result?.login !== true) {
+                setDataLogin(result)
+                setIsLogin(true)
+              }
+              else {
+                navigation.navigate("Tab", {headerTitle: "Đoạn Chat"})
+              }
+            }} title={"Đăng nhập"} />
           </View>
           <View style={{width: "100%", direction: "rtl", padding: 10}}>
             <Text style={{fontSize: 14, textAlign: "right"}}>Quên mật khẩu</Text>
@@ -41,6 +55,22 @@ const Login = () => {
           </View>
         </View>
       </View>
+      {
+
+      }
+      <PopupDialog
+        width={0.5}
+        visible={isLogin}
+        onTouchOutside={() => closePopup()}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        <View style={{padding: 10}}>
+          <Text style={{textAlign: "center", fontSize: 17}}>{dataLogin?.msg}</Text>
+          <Button onPress={()=> closePopup()} title={"Đóng"} />
+        </View>
+      </PopupDialog>
     </View>
   )
 }

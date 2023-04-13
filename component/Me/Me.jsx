@@ -13,13 +13,13 @@ import deaf_user from '../../api/user/deaf_user';
 const Me = () => {
   const isFocused= useIsFocused()
   const actionSheetRef = useRef(null)
-  const {data, setAuth, setData }= useContext(AuthContext)
+  const {data, setAuth, setData, data2, setData2 }= useContext(AuthContext)
   const navigation= useNavigation()
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState)
-    deaf_user(!isEnabled, data?.user?._id, data?.accessToken)
-    setData((prev)=> ({...prev, user: {...data?.user, isDeaf: !isEnabled}}))
+    deaf_user(!isEnabled, data2?._id, data?.accessToken)
+    setData2((prev)=> ({...prev, isDeaf: !isEnabled}))
   };
   const [resultImage, setResultImage]= useState()
   const [profilePicture, setProfilePicture]= useState("")
@@ -28,11 +28,11 @@ const Me = () => {
 
   const [username, setUsername]= useState("")
   useEffect(()=> {
-    setProfilePicture(()=> data?.user?.profilePicture)
-    setGender(()=> data?.user?.gender)
-    setUsername(()=> data?.user?.username)
-    setIsEnabled(()=> data?.user?.isDeaf)
-  }, [data, isFocused])
+    setProfilePicture(()=> data2?.profilePicture)
+    setGender(()=> data2?.gender)
+    setUsername(()=> data2?.username)
+    setIsEnabled(()=> data2?.isDeaf)
+  }, [data2, isFocused])
   const chooseImageFunction= ()=> {
     DocumentPicker.getDocumentAsync()
     .then(async res=> {
@@ -41,8 +41,8 @@ const Me = () => {
         formData.append("image", {...res, type: "image/jpeg"})
         const result= await upload_image(formData)
         setResultImage(result)
-        const result1= await update_info_user(data?.user?._id, username, gender, result?.secure_url, data?.accessToken)
-        setData(prev=> ({...prev, user: {...data?.user, profilePicture: result.secure_url}}))
+        const result1= await update_info_user(data2?._id, username, gender, result?.secure_url, data?.accessToken)
+        setData2(prev=> ({...prev, profilePicture: result.secure_url}))
         setVisible(()=> true)
     })
     .catch(err=> setResultImage(err))
@@ -53,12 +53,12 @@ const Me = () => {
   return (
     <ScrollView>
         <View style={{width: "100%"}}>
-          <Image style={{width: "100%", aspectRatio: 5 / 2}} source={{uri: "https://cover-talk.zadn.vn/default"}} />
+          <Image style={{width: "100%", aspectRatio: 5 / 2}} source={{uri: data2?.coverPicture || "https://cover-talk.zadn.vn/default"}} />
         </View>
         <View style={{width: "100%", position: "relative", display: "flex", justifyContent: "center", alignItems: 'center'}}>
           <View style={{position: "relative", top: -60}}>
-            <Image style={{width: 120, height: 120, borderRadius: 60, marginBottom: 12}} source={{uri: data?.user?.profilePicture}} />
-            <Text style={{fontSize: 18, textAlign: 'center'}}>{data?.user?.username}</Text>
+            <Image style={{width: 120, height: 120, borderRadius: 60, marginBottom: 12}} source={{uri: data2?.profilePicture}} />
+            <Text style={{fontSize: 18, textAlign: 'center'}}>{data2?.username}</Text>
           </View>
         </View>
         <View style={{width: "100%", padding: 10}}>
@@ -66,8 +66,8 @@ const Me = () => {
             <Text style={{marginBottom: 12, fontSize: 18, fontWeight: "600"}}>
               Thông tin cá nhân
             </Text>
-            <Text style={{marginBottom: 12, fontSize: 18}}>Điện thoại: {data?.user?.phoneNumber}</Text>
-            <Text style={{marginBottom: 24, fontSize: 18}}>Giới tính: {data?.user?.gender=== true ? "Nam" : "Nữ"}</Text>
+            <Text style={{marginBottom: 12, fontSize: 18}}>Điện thoại: {data2?.phoneNumber}</Text>
+            <Text style={{marginBottom: 24, fontSize: 18}}>Giới tính: {data2?.gender=== true ? "Nam" : "Nữ"}</Text>
             <Text style={{marginBottom: 12, fontSize: 18, fontWeight: "600"}}>
               Nâng cao
             </Text>
@@ -109,10 +109,10 @@ const Me = () => {
                 <View style={{width: "100%", position: "relative", display: "flex", justifyContent: "center", alignItems: 'center'}}>
                   <View style={{position: "relative", top: -60}}>
                     <View style={{position: "relative"}}>
-                      <Image style={{width: 120, height: 120, borderRadius: 60, marginBottom: 12}} source={{uri: data?.user?.profilePicture}} />
+                      <Image style={{width: 120, height: 120, borderRadius: 60, marginBottom: 12}} source={{uri: data2?.profilePicture}} />
                       <Icons onPress={chooseImageFunction} style={{position: "absolute", right: 5, bottom: 5}} name={"camera-alt"} size={32} />
                     </View>
-                    <Text style={{fontSize: 18, textAlign: 'center'}}>{data?.user?.username}</Text>
+                    <Text style={{fontSize: 18, textAlign: 'center'}}>{data2?.username}</Text>
                   </View>
                 </View>
                 <View style={{padding: 10 }}>

@@ -24,16 +24,6 @@ import Notifications from './component/Notification/Notifications';
 import * as Linking from 'expo-linking';
 import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import "expo-dev-client"
-import AgoraRtmKit from 'agora-rtm-sdk';
-
-// Khởi tạo đối tượng AgoraRtm
-// const client = AgoraRtmKit.createInstance('019c2968a3da4efab5e709e7886b86c8');
-
-// Đăng nhập vào AgoraRtm
-// client.login({ token: '<token>', uid: '<uid>' });
-// import {createAgoraRtcEngine} from 'react-native-agora';
-// const engine = createAgoraRtcEngine();
-// engine.initialize({appId: '019c2968a3da4efab5e709e7886b86c8'});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -167,12 +157,12 @@ const TabNavigationContainer= ()=> {
         },
         
       })}>
-        <Tab.Screen name={"Chats"} component={Chats} options={{headerTitle: ()=> <Text style={{fontSize: 18, fontWeight: "600"}}>Đoạn Chat</Text>, headerTitleAlign: 'center', headerRight: ()=> <Text  onPress={()=> {
+        <Tab.Screen name={"Chats"} component={Chats} options={{tabBarLabel: ()=> null,headerTitle: ()=> <Text style={{fontSize: 18, fontWeight: "600"}}>Đoạn Chat</Text>, headerTitleAlign: 'center', headerRight: ()=> <Text  onPress={()=> {
           setNewChat(true)
         }} style={{ marginRight: 10}}><Icons4 name={"create-outline"} size={24} /></Text>}} />
-        <Tab.Screen name={"Contact"} component={Contact} options={{headerTitle: "Bạn bè", headerTitleAlign: 'center'}} />
-        <Tab.Screen name={"Search"} component={Search} options={{headerTitle: "Tìm kiếm", headerTitleAlign: "center"}} />
-        <Tab.Screen options={{headerTitle: "Thông báo", headerTitleAlign: "center"}} name={"Notifications"} component={Notifications}  />
+        <Tab.Screen name={"Contact"} component={Contact} options={{tabBarLabel: ()=> null,headerTitle: "Bạn bè", headerTitleAlign: 'center'}} />
+        <Tab.Screen name={"Search"} component={Search} options={{tabBarLabel: ()=> null,headerTitle: "Tìm kiếm", headerTitleAlign: "center"}} />
+        <Tab.Screen options={{tabBarLabel: ()=> null,headerTitle: "Thông báo", headerTitleAlign: "center"}} name={"Notifications"} component={Notifications}  />
         <Tab.Screen options={{tabBarLabel: ()=> null, headerTitle: "Cá nhân", headerTitleAlign: "center"}} name={"Me"} component={Me} />
       </Tab.Navigator>
       <PopupDialog

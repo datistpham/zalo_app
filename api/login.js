@@ -2,7 +2,7 @@ import axios from "axios"
 // import { err } from "react-native-svg/lib/typescript/xml"
 import { SERVER_URL } from "../config"
 
-const login= async (phoneNumber, password, setData, setAuth, navigation)=> {
+const login= async (phoneNumber, password, setData, setAuth)=> {
     try {
         const res= await axios({
             url: SERVER_URL+ "/user/login",
@@ -15,12 +15,16 @@ const login= async (phoneNumber, password, setData, setAuth, navigation)=> {
         if(parseInt(res.status) === 200 && result?.login === true) {
             setAuth(()=> true)
             setData(result)
-            return navigation.navigate("Tab", {headerTitle: "Đoạn Chat"})
+            return result
         }
-        return setData(result)
+        else {
+            setData(result)
+            return result
+        }
         
     } catch (error) {
-        return setData(error)
+        setData(error)
+        return error
     }
 }
 

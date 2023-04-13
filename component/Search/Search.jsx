@@ -1,16 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, ScrollView, TextInput, View } from 'react-native'
+import { FlatList, ScrollView, TextInput, View, TouchableHighlight, Text, Button, Image } from 'react-native'
 import Fuse from "fuse.js"
 import { useIsFocused } from '@react-navigation/native'
 import get_list_conversation from '../../api/conversation/get_list_conversation'
 import { AuthContext } from '../AuthContainer/AuthContainer'
 import { Item } from '../Chats/Chats'
+import Icons from "react-native-vector-icons/AntDesign"
+import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
+import search_user_by_phone from '../../api/search_user_by_phone'
+import PopupUser from './PopupUser'
 
 const Search = () => {
   const isFocused= useIsFocused()
   const {data }= useContext(AuthContext)
   const [result, setResult]= useState([])
   const [querySearch, setQuerySearch]= useState("")
+  const [newFriend, setNewFriend]= useState(false)
+  const [newGroup, setNewGroup]= useState(false)
+  const [isExistUser, setIsExistUser]= useState(false)
+  const [isNotExistUser, setIsNotExistUser]= useState(false)
+  const [phoneNumber, setPhoneNumber]= useState("")
+  const [dataUser, setDataUser]= useState()
   const options = {
     keys: [
         { name: 'label', getFn: (book) => book.label },
@@ -22,16 +32,99 @@ const Search = () => {
   }, [isFocused])
   
   const fuse = new Fuse(result, options);
+  const closeNewFriend= ()=> {
+    setPhoneNumber("")
+    setNewFriend(false)
+  }
+  const closeNewGroup= ()=> {
+    setNewGroup(false)
+  }
+
   return (
     <ScrollView>
       <View style={{marginTop: 12, width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-        <TextInput value={querySearch} onChangeText={setQuerySearch} style={{width: "100%", height: 40, borderRadius: 80, borderWidth: 1, borderStyle: "solid", borderColor: "#2e89ff", padding: 10, backgroundColor: "#fff"}} placeholder={"Tìm kiếm cuộc trò chuyện"} />
+        <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
+          <TextInput value={querySearch} onChangeText={setQuerySearch} style={{flex: 1, height: 40, borderRadius: 80, borderWidth: 1, borderStyle: "solid", borderColor: "#2e89ff", padding: 10, backgroundColor: "#fff"}} placeholder={"Tìm kiếm cuộc trò chuyện"} />
+          <View style={{display: "flex", justifyContent: "center", alignItems: "center", margin: 12}}>
+            <TouchableHighlight style={{padding: 10, borderRadius: 100}} underlayColor={"#2e89ff"} onPress={()=> setNewFriend(true)}>
+              <Icons name={"adduser"} size={24} />
+            </TouchableHighlight>
+          </View>
+          <View style={{display: "flex", justifyContent: "center", alignItems: "center", margin: 12}}>
+            <TouchableHighlight style={{padding: 10, borderRadius: 100}} underlayColor={"#2e89ff"} onPress={()=> setNewGroup(true)}>
+              <Icons name={"addusergroup"} size={24} />
+            </TouchableHighlight>
+          </View>
+        </View>
         <View style={{width: '100%', marginTop: 12}}>
           <FlatList data={fuse.search(querySearch)} renderItem={({item, index, separators})=> <Item {...item.item} key={index} idUser={data?.user?._id} />} />
         </View>
       </View>
+      {/* Find */}
+      <PopupDialog
+        width={0.8}
+        visible={newFriend}
+        onTouchOutside={() => closeNewFriend()}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        <View style={{padding: 5}}>
+          <Text style={{fontSize: 18, textAlign: "center", fontWegight: "600", color: "#000", marginBottom: 12}}>Thêm bạn</Text>
+          <Text style={{marginBottom: 12, fontSize: 17}}>Tìm bằng số điện thoại</Text>
+          <TextInput value={phoneNumber} onChangeText={setPhoneNumber} style={{width: "100%", height: 40, borderRadius: 10, backgroundColor: "#e7e7e7", fontSize: 16, padding: 10}} />
+          <View style={{display: "flex", flexDirection: "row-reverse", alignItems: "center", marginTop: 12}}>
+            <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+              <Button onPress={()=> setNewFriend(false)} color={"#555"} title={"Huỷ"} />
+            </View>
+            <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginRight: 12, marginLeft: 12}}>
+              <Button onPress={async ()=> {
+                const result= await search_user_by_phone(phoneNumber, data?.accessToken)
+                if(result?.exist=== false ) {
+                  closeNewFriend()
+                  setIsNotExistUser(true)
+                }
+                else {
+                  setDataUser(result)
+                  closeNewFriend()
+                  setIsExistUser(true)
+                }
+              }} title={"Xác nhận"} />
+            </View>
+          </View>
+        </View>
+      </PopupDialog>
+      {/*  */}
+
+      <PopupDialog
+        width={0.8}
+        visible={isNotExistUser}
+        onTouchOutside={() => setIsNotExistUser(false)}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        <View style={{padding: 5}}>
+          <Text style={{fontSize: 18, fontWeight: "600", textAlign: "center", marginBottom: 12}}>Không tìm thấy người dùng</Text>          
+          <Button title={"Đóng"} onPress={()=> setIsNotExistUser(false)}>Đóng</Button>
+        </View>
+      </PopupDialog>
+
+      {/* Find out user */}
+      <PopupUser isExistUser={isExistUser} setIsExistUser={setIsExistUser} dataUser={dataUser} data={data} />
+
+      <PopupDialog
+        width={0.5}
+        visible={newGroup}
+        onTouchOutside={() => closeNewGroup()}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        
+      </PopupDialog>
     </ScrollView>
   )
 }
 
-export default Search
+export default Search 

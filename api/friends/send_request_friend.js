@@ -9,7 +9,7 @@ const send_request_make_friend_by_me = async (id, accessToken, idUser) => {
         "authorization": "Bearer "+ accessToken
     },
     data: {
-        userId: idUser
+      userId: idUser
     }
   })
   const result= await res.data
