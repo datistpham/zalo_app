@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, ScrollView, TextInput, View, TouchableHighlight, Text, Button, Image } from 'react-native'
+import { FlatList, ScrollView, TextInput, View, TouchableHighlight, Text, Button, Image, Dimensions } from 'react-native'
 import Fuse from "fuse.js"
 import { useIsFocused } from '@react-navigation/native'
 import get_list_conversation from '../../api/conversation/get_list_conversation'
@@ -10,7 +10,7 @@ import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import search_user_by_phone from '../../api/search_user_by_phone'
 import PopupUser from './PopupUser'
 
-const Search = () => {
+const Search = (props) => {
   const isFocused= useIsFocused()
   const {data }= useContext(AuthContext)
   const [result, setResult]= useState([])
@@ -39,13 +39,44 @@ const Search = () => {
   const closeNewGroup= ()=> {
     setNewGroup(false)
   }
+  useEffect(()=> {
+    if(querySearch?.length > 0) {
+      props?.setIsSearch(()=> true)
+    }
+    else {
+      props?.setIsSearch(()=> false)
+    }
+  }, [querySearch])
+  function searchByLabel(searchTerm) {
+    // Filter the data to only include items with matching labels
 
+    const results = result?.filter(item => item?.label?.toLowerCase()?.includes(searchTerm?.toLowerCase()));
+    return results;
+  }
+
+  function searchByMember(searchTerm) {
+    // Filter the data to only include items with members that have matching usernames
+    const results = result?.filter(item=> item?.label=== undefined )?.filter(item => item?.member?.some(member => member?.username?.toLowerCase()?.includes(searchTerm.toLowerCase())));
+    return results;
+  }
+
+  function finalSearch(searchTerm) {
+    const search1= searchByLabel(searchTerm)
+    const search2= searchByMember(searchTerm)
+    return search1.concat(search2)
+  }
   return (
-    <ScrollView>
-      <View style={{marginTop: 12, width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+    <View>
+      <View style={{marginTop: 12, width: "100%", display: "flex", justifyContent: "center", alignItems: "center",}}>
         <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
-          <TextInput value={querySearch} onChangeText={setQuerySearch} style={{flex: 1, height: 40, borderRadius: 80, borderWidth: 1, borderStyle: "solid", borderColor: "#2e89ff", padding: 10, backgroundColor: "#fff"}} placeholder={"Tìm kiếm cuộc trò chuyện"} />
-          <View style={{display: "flex", justifyContent: "center", alignItems: "center", margin: 12}}>
+          <View style={{flex: 1, height: 50, position: "relative", marginBottom: 12}}>
+            <Icons style={{position: "absolute", left: 0, transform: [
+              {translateX: - Dimensions.get('window').height}
+            ]}} name={"search1"} size={20} />
+            <TextInput value={querySearch} onChangeText={setQuerySearch} style={{flex: 1, height: 50, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: "#2e89ff", padding: 10, backgroundColor: "#fff", marginLeft: 10, marginRight: 10}} placeholder={"Tìm kiếm cuộc trò chuyện"} />
+          
+          </View>
+          {/* <View style={{display: "flex", justifyContent: "center", alignItems: "center", margin: 12}}>
             <TouchableHighlight style={{padding: 10, borderRadius: 100}} underlayColor={"#2e89ff"} onPress={()=> setNewFriend(true)}>
               <Icons name={"adduser"} size={24} />
             </TouchableHighlight>
@@ -54,12 +85,19 @@ const Search = () => {
             <TouchableHighlight style={{padding: 10, borderRadius: 100}} underlayColor={"#2e89ff"} onPress={()=> setNewGroup(true)}>
               <Icons name={"addusergroup"} size={24} />
             </TouchableHighlight>
-          </View>
+          </View> */}
         </View>
-        <View style={{width: '100%', marginTop: 12}}>
-          <FlatList data={fuse.search(querySearch)} renderItem={({item, index, separators})=> <Item {...item.item} key={index} idUser={data?.user?._id} />} />
-        </View>
+        {
+          props?.isSearch=== true && 
+          <ScrollView style={{width: '100%', marginTop: 12}}>
+            <FlatList data={finalSearch(querySearch)} renderItem={({item, index, separators})=> <Item {...item} key={index} idUser={data?.user?._id} />} />
+          </ScrollView>
+        }
       </View>
+
+
+
+
       {/* Find */}
       <PopupDialog
         width={0.8}
@@ -123,7 +161,7 @@ const Search = () => {
       >
         
       </PopupDialog>
-    </ScrollView>
+    </View>
   )
 }
 

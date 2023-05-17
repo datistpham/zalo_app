@@ -24,14 +24,17 @@ const Me = () => {
   const [resultImage, setResultImage]= useState()
   const [profilePicture, setProfilePicture]= useState("")
   const [gender, setGender]= useState("")
+  const [address, setAddress]= useState("")
   const toggleGender = () => setGender(previousState => !previousState);
 
   const [username, setUsername]= useState("")
   useEffect(()=> {
     setProfilePicture(()=> data2?.profilePicture)
+    
     setGender(()=> data2?.gender)
     setUsername(()=> data2?.username)
     setIsEnabled(()=> data2?.isDeaf)
+    setAddress(()=> data2?.address)
   }, [data2, isFocused])
   const chooseImageFunction= ()=> {
     DocumentPicker.getDocumentAsync()
@@ -41,8 +44,10 @@ const Me = () => {
         formData.append("image", {...res, type: "image/jpeg"})
         const result= await upload_image(formData)
         setResultImage(result)
-        const result1= await update_info_user(data2?._id, username, gender, result?.secure_url, data?.accessToken)
+        // console.log(result?.secure_url)
+        // const result1= await update_info_user(data2?._id, username, gender, result?.secure_url, data?.accessToken)
         setData2(prev=> ({...prev, profilePicture: result.secure_url}))
+        setData(prev=> ({...prev, profilePicture: result.secure_url}))
         setVisible(()=> true)
     })
     .catch(err=> setResultImage(err))
@@ -94,7 +99,7 @@ const Me = () => {
           <ActionSheet ref={actionSheetRef}>
             <View style={{height: "100%"}}>
               <View style={{marginBottom: 12, padding: 10, display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexDirection: 'row'}}>
-                  <View><Text style={{opacity: 0}}>Xongaaa</Text></View>
+                  <View><Text style={{opacity: 0}}>Xong</Text></View>
                   <TouchableHighlight underlayColor={"unset"} style={{display: "flex", justifyContent:"center", alignItems: "center"}}>
                     <Text style={{height: 5, width: 60, borderRadius: 5, backgroundColor: "#d9d9d9", textAlign: "center"}}></Text>
                   </TouchableHighlight>
@@ -109,7 +114,7 @@ const Me = () => {
                 <View style={{width: "100%", position: "relative", display: "flex", justifyContent: "center", alignItems: 'center'}}>
                   <View style={{position: "relative", top: -60}}>
                     <View style={{position: "relative"}}>
-                      <Image style={{width: 120, height: 120, borderRadius: 60, marginBottom: 12}} source={{uri: data2?.profilePicture}} />
+                      <Image style={{width: 120, height: 120, borderRadius: 60, marginBottom: 12}} source={{uri: data?.profilePicture}} />
                       <Icons onPress={chooseImageFunction} style={{position: "absolute", right: 5, bottom: 5}} name={"camera-alt"} size={32} />
                     </View>
                     <Text style={{fontSize: 18, textAlign: 'center'}}>{data2?.username}</Text>
@@ -133,10 +138,10 @@ const Me = () => {
                   <KeyboardAvoidingView behavior={"padding"}>
                     <>
                       <Text style={{fontSize: 17, marginBottom: 12}}>Địa chỉ</Text>
-                      <TextInput value={""} onChangeText={()=> {}} style={{width: "100%", height: 40, borderColor: "#2e89ff", backgroundColor: "#f2f0f5", borderWidth: 1, borderStyle: "solid", borderRadius: 10, padding: 10, fontSize: 17, marginBottom: 18}} />
+                      <TextInput value={address} onChangeText={setAddress} style={{width: "100%", height: 40, borderColor: "#2e89ff", backgroundColor: "#f2f0f5", borderWidth: 1, borderStyle: "solid", borderRadius: 10, padding: 10, fontSize: 17, marginBottom: 18}} />
                     </>
                   </KeyboardAvoidingView>
-                  <Button title={"Lưu"} onPress={()=> {}} />
+                  <Button title={"Lưu"} onPress={()=> update_info_user(data?._id, username, profilePicture, gender, false)} />
                 </View>
               </View>
               <Snackbar

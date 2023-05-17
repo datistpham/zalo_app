@@ -1,5 +1,5 @@
 // import { StatusBar } from 'expo-status-bar';
-import { Image, Text, TouchableHighlight, View } from 'react-native';
+import { Image, Text, TouchableHighlight, View, TextInput, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icons from "react-native-vector-icons/MaterialIcons"
@@ -24,6 +24,10 @@ import Notifications from './component/Notification/Notifications';
 import * as Linking from 'expo-linking';
 import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import "expo-dev-client"
+import PopupUser from './component/Search/PopupUser';
+import { URL_WEB } from './config';
+import Signup from './component/Signup/Signup';
+import search_user_by_phone from './api/search_user_by_phone';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,6 +64,7 @@ const WrapApp= ()=> {
           </TouchableHighlight>
         })} name={"Storage"} component={Storage} />
         <Stack.Screen options={{headerTitle: "Đăng nhập", headerTitleAlign: 'center'}} name={"Login"} component={Login} />
+        <Stack.Screen options={{headerTitle: "Đăng ký", headerTitleAlign: 'center'}} name={"Signup"} component={Signup} />
         <Stack.Screen options={{headerTitle: "Đoạn chat", headerTitleAlign: "center", headerLeft: ()=> <></>, headerShown: false}} name={"Tab"} component={TabNavigationContainer} />
         <Stack.Screen options={({ route, navigation }) => ({
           headerTitle: ()=> 
@@ -79,7 +84,7 @@ const WrapApp= ()=> {
           headerRight: ()=> <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
             <Icons name={"call"} size={32} color={"#2e89ff"} />
             <TouchableHighlight style={{padding: 10, marginLeft: 18}}>
-              <Icons3 onPress={()=> Linking.openURL('https://www.webrtc-experiment.com/MultiStreamsMixer')} name={"video"} size={32} color={"#2e89ff"} />
+              <Icons3 onPress={()=> Linking.openURL(URL_WEB+ "/call"+ "/"+ route.params?.idConversation)} name={"video"} size={32} color={"#2e89ff"} />
             </TouchableHighlight>
           </View>,
           headerBackVisible: false
@@ -104,8 +109,21 @@ const WrapApp= ()=> {
 const TabNavigationContainer= ()=> {
   const { data}= useContext(AuthContext)
   const [newChat, setNewChat]= useState(false)
+  const [newFriend, setNewFriend]= useState(false)
+  const [isExistUser, setIsExistUser]= useState(false)
+  const [newGroup, setNewGroup]= useState(false)
+  const [isNotExistUser, setIsNotExistUser]= useState(false)
+  const [phoneNumber, setPhoneNumber]= useState("")
+  const [dataUser, setDataUser]= useState()
   const closeNewChat= ()=> {
     setNewChat(false)
+  }
+  const closeNewFriend= ()=> {
+    setPhoneNumber("")
+    setNewFriend(false)
+  }
+  const closeNewGroup= ()=> {
+    setNewGroup(false)
   }
   return (
     <>
@@ -127,14 +145,14 @@ const TabNavigationContainer= ()=> {
               return <Icons3 name={"user-friends"} size={24} color={"#000"} />
             }
           }
-          else if(route.name=== "Search") {
-            if(focused=== true) {
-              return <Icons name={"search"} size={24} color={"#2e89ff"} />
-            }
-            else {
-              return <Icons name={"search"} size={24} color={"#000"} />
-            }
-          }
+          // else if(route.name=== "Search") {
+          //   if(focused=== true) {
+          //     return <Icons name={"search"} size={24} color={"#2e89ff"} />
+          //   }
+          //   else {
+          //     return <Icons name={"search"} size={24} color={"#000"} />
+          //   }
+          // }
           else if(route.name=== "Notifications") {
             if(focused=== true) {
               return <Icons name={"notifications"} size={24} color={"#2e89ff"} />
@@ -161,7 +179,7 @@ const TabNavigationContainer= ()=> {
           setNewChat(true)
         }} style={{ marginRight: 10}}><Icons4 name={"create-outline"} size={24} /></Text>}} />
         <Tab.Screen name={"Contact"} component={Contact} options={{tabBarLabel: ()=> null,headerTitle: "Bạn bè", headerTitleAlign: 'center'}} />
-        <Tab.Screen name={"Search"} component={Search} options={{tabBarLabel: ()=> null,headerTitle: "Tìm kiếm", headerTitleAlign: "center"}} />
+        {/* <Tab.Screen name={"Search"} component={Search} options={{tabBarLabel: ()=> null,headerTitle: "Tìm kiếm", headerTitleAlign: "center"}} /> */}
         <Tab.Screen options={{tabBarLabel: ()=> null,headerTitle: "Thông báo", headerTitleAlign: "center"}} name={"Notifications"} component={Notifications}  />
         <Tab.Screen options={{tabBarLabel: ()=> null, headerTitle: "Cá nhân", headerTitleAlign: "center"}} name={"Me"} component={Me} />
       </Tab.Navigator>
@@ -174,11 +192,78 @@ const TabNavigationContainer= ()=> {
         })}
       >
         <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-          <TouchableHighlight>
+          <TouchableHighlight onPress={()=> setNewFriend(()=> true)} underlayColor={"unset"}>
             <Text style={{paddingTop: 10, paddingBottom: 10, fontSize: 17}}>Tạo liên hệ mới</Text>
           </TouchableHighlight>
-          <Text style={{paddingTop: 10, paddingBottom: 10, fontSize: 17}}>Tạo nhóm mới</Text>
+          <TouchableHighlight onPress={()=> setNewGroup(()=> true)} underlayColor={"unset"}>
+            <Text style={{paddingTop: 10, paddingBottom: 10, fontSize: 17}}>Tạo nhóm mới</Text>
+          </TouchableHighlight>
         </View>
+      </PopupDialog>
+      {/*  */}
+
+      {/* Find */}
+      <PopupDialog
+        width={0.8}
+        visible={newFriend}
+        onTouchOutside={() => closeNewFriend()}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        <View style={{padding: 5}}>
+          <Text style={{fontSize: 18, textAlign: "center", fontWegight: "600", color: "#000", marginBottom: 12}}>Thêm bạn</Text>
+          <Text style={{marginBottom: 12, fontSize: 17}}>Tìm bằng số điện thoại</Text>
+          <TextInput value={phoneNumber} onChangeText={setPhoneNumber} style={{width: "100%", height: 40, borderRadius: 10, backgroundColor: "#e7e7e7", fontSize: 16, padding: 10}} />
+          <View style={{display: "flex", flexDirection: "row-reverse", alignItems: "center", marginTop: 12}}>
+            <View style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+              <Button onPress={()=> setNewFriend(false)} color={"#555"} title={"Huỷ"} />
+            </View>
+            <View style={{display: "flex", justifyContent: "center", alignItems: "center", marginRight: 12, marginLeft: 12}}>
+              <Button onPress={async ()=> {
+                const result= await search_user_by_phone(phoneNumber, data?.accessToken)
+                if(result?.exist=== false ) {
+                  closeNewFriend()
+                  setIsNotExistUser(true)
+                }
+                else {
+                  setDataUser(result)
+                  closeNewFriend()
+                  setIsExistUser(true)
+                }
+              }} title={"Xác nhận"} />
+            </View>
+          </View>
+        </View>
+      </PopupDialog>
+      {/*  */}
+
+      <PopupDialog
+        width={0.8}
+        visible={isNotExistUser}
+        onTouchOutside={() => setIsNotExistUser(false)}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        <View style={{padding: 5}}>
+          <Text style={{fontSize: 18, fontWeight: "600", textAlign: "center", marginBottom: 12}}>Không tìm thấy người dùng</Text>          
+          <Button title={"Đóng"} onPress={()=> setIsNotExistUser(false)}>Đóng</Button>
+        </View>
+      </PopupDialog>
+
+      {/* Find out user */}
+      <PopupUser isExistUser={isExistUser} setIsExistUser={setIsExistUser} dataUser={dataUser} data={data} />
+
+      <PopupDialog
+        width={0.5}
+        visible={newGroup}
+        onTouchOutside={() => closeNewGroup()}
+        dialogAnimation={new SlideAnimation({
+          slideFrom: 'bottom',
+        })}
+      >
+        
       </PopupDialog>
     </>
   )

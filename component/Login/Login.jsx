@@ -21,7 +21,7 @@ const Login = () => {
     <View style={{flex: 1, display: "flex", justifyContent: "center", alignItems: "center", position: "relative"}}>
       <Background />
       <View style={{width: "100%", padding: 10, marginTop: 12}}>
-        <Text style={{textAlign: "center", marginBottom: 8, fontFamily: "Roboto", fontSize: 24}}>Đăng nhập tài khoản tin nhăn nhanh</Text>
+        <Text style={{textAlign: "center", marginBottom: 8, fontFamily: "Roboto", fontSize: 24}}>Đăng nhập tài khoản Chat NPD</Text>
         <Text style={{textAlign: "center", marginBottom: 16, fontFamily: "Roboto", fontSize: 24}}>để kết nối với ứng dụng</Text>
         <View style={{width: '100%', backgroundColor: "#fff", borderRadius: 10}}>
           <View style={{width: "100%", padding: 10, backgroundColor: "#fff", borderRadius: 10, position: "relative", marginBottom: 12}}>
@@ -50,7 +50,7 @@ const Login = () => {
           </View>
           <View style={{marginTop: 18, padding: 10}}>
             <View style={{width: "100%", borderTopColor: "#e7e7e7", borderStyle: "solid", borderTopWidth: 1, padding: 10, borderBottomColor: "#e7e7e7", borderBottomWidth: 1}}>
-              <Text style={{textAlign: "center", textDecorationStyle: "solid", textDecorationLine: "underline", textDecorationColor: "#000", color: "#000"}}>Đăng ký</Text>
+              <Text onPress={()=> navigation.navigate("Signup")} style={{textAlign: "center", textDecorationStyle: "solid", textDecorationLine: "underline", textDecorationColor: "#000", color: "#000"}}>Đăng ký</Text>
             </View>
           </View>
         </View>

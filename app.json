@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "zalo_app",
-    "slug": "zalo_app",
+    "name": "npd_chat_app",
+    "slug": "chatnpd",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.jpg",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -30,26 +30,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "build": {
-      "preview": {
-        "android": {
-          "buildType": "apk"
-        }
-      },
-      "preview2": {
-        "android": {
-          "gradleCommand": ":app:assembleRelease"
-        }
-      },
-      "preview3": {
-        "developmentClient": true
-      },
-      "production": {}
-    },
     "extra": {
       "eas": {
-        "projectId": "1336665e-c33f-46c2-ac0e-a4206e6707fd"
+        "projectId": "ab22e75c-ad06-49ac-9c85-ed11b701aa04"
       }
-    }
+    },
+    "owner": "giang10a1dz"
   }
 }

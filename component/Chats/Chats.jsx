@@ -6,6 +6,7 @@ import { AuthContext } from '../AuthContainer/AuthContainer'
 import { SocketContainerContext } from '../SocketContainer/SocketContainer'
 import { LogBox } from 'react-native';
 import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
+import Search from '../Search/Search'
 
 const Chats = () => {
   useEffect(() => {
@@ -14,15 +15,22 @@ const Chats = () => {
   const [visible, setVisible] = useState(false);
   const [result, setResult] = useState([])
   const { data } = useContext(AuthContext)
+  const [isSearch, setIsSearch]= useState(false)
   const route= useRoute()
   useEffect(() => {
     get_list_conversation(setResult, data?.user?._id, data?.accessToken)
   }, [data])
   return (
     <View style={{ flex: 1, display: "flex" }}>
-      <ScrollView style={{ flex: 1 }}>
-        <FlatList data={result} renderItem={({ item, index, separators }) => <Item key={index} {...item} setVisible={setVisible} idUser={data?.user?._id} />} />
-      </ScrollView>
+      <Search setIsSearch={setIsSearch} isSearch={isSearch} />
+      {
+        isSearch=== false && 
+        <ScrollView style={{ flex: 1 }}>
+          <FlatList data={result} renderItem={({ item, index, separators }) => <Item key={index} {...item} setVisible={setVisible} idUser={data?.user?._id} />} />
+        </ScrollView>
+      }
+      
+      {/* Create a new contact */}
       <PopupDialog
         width={0.5}
         visible={visible}
