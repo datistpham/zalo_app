@@ -45,7 +45,7 @@ const Login = () => {
                 else {
                   navigation.navigate("Tab", {headerTitle: "Đoạn Chat"})
                 }
-              }} color={"primary"} title={"Đăng nhập"} />
+              }} color={"#2e89ff"} title={"Đăng nhập"} />
             }
             {
               Platform.OS=== "ios" &&
