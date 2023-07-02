@@ -6,7 +6,7 @@ import {
   View,
   TextInput,
   Button,
-  Platform
+  Platform,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -92,7 +92,11 @@ const WrapApp = () => {
                   onPress={() => navigation.goBack(-1)}
                 >
                   <View style={{ padding: 10 }}>
-                    <Icons name={"arrow-back-ios"} color={"#2e89ff"} size={20} />
+                    <Icons
+                      name={"arrow-back-ios"}
+                      color={"#2e89ff"}
+                      size={20}
+                    />
                   </View>
                 </TouchableHighlight>
               ),
@@ -122,25 +126,56 @@ const WrapApp = () => {
           />
           <Stack.Screen
             options={({ route, navigation }) => ({
-              headerStyle: {height: 100},
+              headerStyle: { height: 100 },
               headerTitleStyle: {
                 height: 100,
-                maxWidth: 250
+                maxWidth: 250,
               },
               headerTitleAlign: "left",
               headerTitle: () => {
-                if(Platform.OS=== "ios") {
-                  return <></>
+                if (Platform.OS === "ios") {
+                  return <></>;
                 }
-                if(Platform.OS=== "android") {
-                  return <TouchableHighlight onPress={()=> navigation.navigate("AboutDetailConversation", {idConversation: route.params?.idConversation, ...route.params})} underlayColor={"unset"}>
-                  <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row", padding: 10}}>
-                    <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row", padding: 10}}>
-                      <Image style={{width: 50, height: 50, borderRadius: 25}} source={{uri: route.params?.imageGroup}} />
-                      <Text style={{fontSize: 18, marginLeft:12}}>{route.params?.labelGroup}</Text>
-                    </View>
-                  </View>
-                </TouchableHighlight>
+                if (Platform.OS === "android") {
+                  return (
+                    <TouchableHighlight
+                      onPress={() =>
+                        navigation.navigate("AboutDetailConversation", {
+                          idConversation: route.params?.idConversation,
+                          ...route.params,
+                        })
+                      }
+                      underlayColor={"unset"}
+                    >
+                      <View
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "row",
+                          padding: 10,
+                        }}
+                      >
+                        <View
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                            padding: 10,
+                          }}
+                        >
+                          <Image
+                            style={{ width: 50, height: 50, borderRadius: 25 }}
+                            source={{ uri: route.params?.imageGroup }}
+                          />
+                          <Text style={{ fontSize: 18, marginLeft: 12 }}>
+                            {route.params?.labelGroup}
+                          </Text>
+                        </View>
+                      </View>
+                    </TouchableHighlight>
+                  );
                 }
               },
               headerLeft: () => (
@@ -148,21 +183,72 @@ const WrapApp = () => {
                   underlayColor={"unset"}
                   onPress={() => navigation.goBack(-1)}
                 >
-                  <View style={{display: "flex", alignItems: "center", flexDirection: "row"}}>
+                  <View
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
                     <View style={{ padding: 10 }}>
-                      <Icons name={"arrow-back-ios"} color={"#2e89ff"} size={20} />
+                      <Icons
+                        name={"arrow-back-ios"}
+                        color={"#2e89ff"}
+                        size={20}
+                      />
                     </View>
                     {/* ios new here */}
-                    <TouchableHighlight onPress={()=> navigation.navigate("AboutDetailConversation", {idConversation: route.params?.idConversation, ...route.params})} underlayColor={"unset"}>
-                  <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
-                    <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
-                      <Image style={{width: 36, height: 36, borderRadius: 18}} source={{uri: route.params?.imageGroup}} />
-                      <Text lineBreakMode="tail" numberOfLines={1} style={{flex: 1, fontSize: 18, marginLeft:12, maxWidth: 150}}>{route.params?.labelGroup}</Text>
-                    </View>
+                    {Platform.OS === "ios" && (
+                      <TouchableHighlight
+                        onPress={() =>
+                          navigation.navigate("AboutDetailConversation", {
+                            idConversation: route.params?.idConversation,
+                            ...route.params,
+                          })
+                        }
+                        underlayColor={"unset"}
+                      >
+                        <View
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <View
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              flexDirection: "row",
+                            }}
+                          >
+                            <Image
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: 18,
+                              }}
+                              source={{ uri: route.params?.imageGroup }}
+                            />
+                            <Text
+                              lineBreakMode="tail"
+                              numberOfLines={1}
+                              style={{
+                                flex: 1,
+                                fontSize: 18,
+                                marginLeft: 12,
+                                maxWidth: 150,
+                              }}
+                            >
+                              {route.params?.labelGroup}
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableHighlight>
+                    )}
                   </View>
-                </TouchableHighlight>
-                  </View>
-                  
                 </TouchableHighlight>
               ),
               headerRight: () => (
@@ -175,7 +261,12 @@ const WrapApp = () => {
                   }}
                 >
                   <Icons name={"call"} size={32} color={"#2e89ff"} />
-                  <TouchableHighlight style={{ padding: Platform.OS=== "ios" ? 0 : 10, marginLeft: 18 }}>
+                  <TouchableHighlight
+                    style={{
+                      padding: Platform.OS === "ios" ? 0 : 10,
+                      marginLeft: 18,
+                    }}
+                  >
                     <Icons3
                       onPress={() =>
                         Linking.openURL(
@@ -212,7 +303,11 @@ const WrapApp = () => {
                   onPress={() => navigation.goBack(-1)}
                 >
                   <View style={{ padding: 10 }}>
-                    <Icons name={"arrow-back-ios"} color={"#2e89ff"} size={20} />
+                    <Icons
+                      name={"arrow-back-ios"}
+                      color={"#2e89ff"}
+                      size={20}
+                    />
                   </View>
                 </TouchableHighlight>
               ),
