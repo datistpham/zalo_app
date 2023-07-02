@@ -129,7 +129,9 @@ const WrapApp = () => {
               },
               headerTitleAlign: "left",
               headerTitle: () => {
-
+                if(Platform.OS=== "ios") {
+                  return <></>
+                }
                 if(Platform.OS=== "android") {
                   return <TouchableHighlight onPress={()=> navigation.navigate("AboutDetailConversation", {idConversation: route.params?.idConversation, ...route.params})} underlayColor={"unset"}>
                   <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row", padding: 10}}>

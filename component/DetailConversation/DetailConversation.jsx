@@ -42,10 +42,10 @@ const DetailConversation = () => {
     });
   }, [socketState]);
   return (
-    <View style={{flex: 1, position: "relative"}}>
+    <View style={{flex: 1, position: "relative", backgroundColor: "#fff"}}>
         <ContentConversation result={result} meId={data?.user?._id} socketState={socketState} />
         <Type />
-        <View style={{height: 60}}>
+        <View style={{height: 60 + insets.bottom}}>
 
         </View>
     </View>

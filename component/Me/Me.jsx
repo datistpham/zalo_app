@@ -165,7 +165,7 @@ const Me = () => {
       </View>
       <SafeAreaView>
         <ActionSheet ref={actionSheetRef}>
-          <View style={{ height: "100%" }}>
+          <View style={{ height: "100%", marginTop: insets.top }}>
             <View
               style={{
                 marginBottom: 12,
@@ -178,7 +178,7 @@ const Me = () => {
               }}
             >
               <View>
-                <Text style={{ opacity: 0 }}>Xong</Text>
+                <Text style={{ opacity: 0, padding: 10 }}>Xong</Text>
               </View>
               <TouchableHighlight
                 underlayColor={"unset"}
