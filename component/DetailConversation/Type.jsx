@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native'
 import React, { memo, useContext, useEffect, useState } from 'react'
-import { TextInput, TouchableHighlight, View, Text, Image, SafeAreaView  } from 'react-native'
+import { TextInput, TouchableHighlight, View, Text, Image, SafeAreaView, Platform  } from 'react-native'
 import Icons from 'react-native-vector-icons/MaterialIcons'
 import Icons1 from 'react-native-vector-icons/AntDesign'
 import { AuthContext } from '../AuthContainer/AuthContainer'
@@ -66,7 +66,7 @@ const Type = memo(() => {
           }
       }
     return (
-      <View style={{width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: 'row', padding: 10, backgroundColor: "#fff", position: "absolute", bottom: 0, left: 0, borderTopColor: "#d9d9d9", borderStyle: "solid", borderTopWidth: 1, zIndex: 999, paddingBottom: insets.bottom}}>
+      <View style={{width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: 'row', padding: 10, backgroundColor: "#fff", position: "absolute", bottom: 0, left: 0, borderTopColor: "#d9d9d9", borderStyle: "solid", borderTopWidth: 1, zIndex: 999, paddingBottom: Platform.OS=== "ios" ? insets.bottom : 10}}>
           <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
               <ChooseImage />
               <ChooseFile />
