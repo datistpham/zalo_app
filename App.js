@@ -148,12 +148,20 @@ const WrapApp = () => {
                   underlayColor={"unset"}
                   onPress={() => navigation.goBack(-1)}
                 >
-                  <>
+                  <View style={{display: "flex", alignItems: "center", flexDirection: "row"}}>
                     <View style={{ padding: 10 }}>
                       <Icons name={"arrow-back-ios"} color={"#2e89ff"} size={20} />
                     </View>
                     {/* ios new here */}
-                  </>
+                    <TouchableHighlight onPress={()=> navigation.navigate("AboutDetailConversation", {idConversation: route.params?.idConversation, ...route.params})} underlayColor={"unset"}>
+                  <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
+                    <View style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
+                      <Image style={{width: 36, height: 36, borderRadius: 18}} source={{uri: route.params?.imageGroup}} />
+                      <Text lineBreakMode="tail" numberOfLines={1} style={{flex: 1, fontSize: 18, marginLeft:12, maxWidth: 150}}>{route.params?.labelGroup}</Text>
+                    </View>
+                  </View>
+                </TouchableHighlight>
+                  </View>
                   
                 </TouchableHighlight>
               ),
@@ -167,7 +175,7 @@ const WrapApp = () => {
                   }}
                 >
                   <Icons name={"call"} size={32} color={"#2e89ff"} />
-                  <TouchableHighlight style={{ padding: 10, marginLeft: 18 }}>
+                  <TouchableHighlight style={{ padding: Platform.OS=== "ios" ? 0 : 10, marginLeft: 18 }}>
                     <Icons3
                       onPress={() =>
                         Linking.openURL(
