@@ -89,12 +89,13 @@ const Me = () => {
               <Button  color={"#2e89ff"} title={"Cập nhật thông tin"} onPress={()=> actionSheetRef.current?.show()} />
             </View>
             <View style={{width: "100%", marginBottom: 12}}>
-              <Button color={"#2e89ff"} title={"Đăng xuất"} onPress={()=> {
+              <Button color={"#f00"} title={"Đăng xuất"} onPress={()=> {
                 setAuth(()=> false)
                 navigation.navigate("Login")
               }} />
             </View>
           </View>
+              {/* popup edit user */}
         </View>
           <ActionSheet ref={actionSheetRef}>
             <View style={{height: "100%"}}>
@@ -142,6 +143,9 @@ const Me = () => {
                     </>
                   </KeyboardAvoidingView>
                   <Button title={"Lưu"} onPress={()=> update_info_user(data?._id, username, profilePicture, gender, false)} />
+                  <View style={{marginTop: 12}}>
+                    <Button color={"#555"} title={"Đóng"} onPress={()=> actionSheetRef.current?.hide()} />
+                  </View>
                 </View>
               </View>
               <Snackbar

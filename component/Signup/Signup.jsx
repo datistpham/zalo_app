@@ -49,8 +49,8 @@ const Signup = () => {
     <View style={{flex: 1, display: "flex", justifyContent: "center", alignItems: "center", position: "relative"}}>
       <Background />
       <View style={{width: "100%", padding: 10, marginTop: 12}}>
-        <Text style={{textAlign: "center", marginBottom: 8, fontFamily: "Roboto", fontSize: 24}}>Đăng ký tài khoản Chat NPD</Text>
-        <Text style={{textAlign: "center", marginBottom: 16, fontFamily: "Roboto", fontSize: 24}}>để kết nối với ứng dụng</Text>
+        <Text style={{textAlign: "center", marginBottom: 8, fontSize: 24}}>Đăng ký tài khoản Chat NPD</Text>
+        <Text style={{textAlign: "center", marginBottom: 16, fontSize: 24}}>để kết nối với ứng dụng</Text>
         {
             isVerfiy=== false &&
             <View style={{width: '100%', backgroundColor: "#fff", borderRadius: 10}}>

@@ -17,6 +17,7 @@ const Chats = () => {
   const { data } = useContext(AuthContext)
   const [isSearch, setIsSearch]= useState(false)
   const route= useRoute()
+  
   useEffect(() => {
     get_list_conversation(setResult, data?.user?._id, data?.accessToken)
   }, [data])
@@ -26,7 +27,7 @@ const Chats = () => {
       {
         isSearch=== false && 
         <ScrollView style={{ flex: 1 }}>
-          <FlatList data={result} renderItem={({ item, index, separators }) => <Item key={index} {...item} setVisible={setVisible} idUser={data?.user?._id} />} />
+          <FlatList data={result?.filter(item=> item.member.length > 1)} renderItem={({ item, index, separators }) => <Item key={index} {...item} setVisible={setVisible} idUser={data?.user?._id} />} />
         </ScrollView>
       }
       

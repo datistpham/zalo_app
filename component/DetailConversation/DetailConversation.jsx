@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native'
 import React, {createRef, forwardRef, memo, useContext, useEffect, useRef, useState } from 'react'
-import { View, Text, ScrollView, FlatList, Image, TouchableHighlight, Button } from 'react-native'
+import { View, Text, ScrollView, FlatList, Image, TouchableHighlight, Button, SafeAreaView } from 'react-native'
 import get_message_conversationid from '../../api/message/get_message_conversationid'
 import { AuthContext } from '../AuthContainer/AuthContainer'
 import Type from './Type'
@@ -14,12 +14,15 @@ import Icons from 'react-native-vector-icons/AntDesign'
 import RBSheet from 'react-native-raw-bottom-sheet'
 // import WaveForm from 'react-native-audiowaveform'
 import { Audio } from 'expo-av';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
 // import AboutDetailConversation from './AboutDetailConversation'
 
 const DetailConversation = () => {
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, [])
+  const insets= useSafeAreaInsets()
   const {socketState}= useContext(SocketContainerContext)
   const [result, setResult]= useState([])
   const {data }= useContext(AuthContext)
@@ -114,6 +117,7 @@ const ComponentMessage= memo(forwardRef((props, ref)=> {
     )
 })
 )
+
 const AudioComponent= memo((props)=> {
     async function playSound() {
         const { sound } = await Audio.Sound.createAsync({uri: props?.message});

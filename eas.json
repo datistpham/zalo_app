@@ -1,24 +1,16 @@
 {
-  "cli": {
-    "version": ">= 3.3.2"
-  },
-  "build": {
-    "preview": {
-      "android": {
-        "buildType": "apk"
-      }
+  "expo": {
+    "name": "Your App Name",
+    "icon": "./path/to/your/app-icon.png",
+    "version": "1.0.0",
+    "slug": "your-app-slug",
+    "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname",
+      "buildNumber": "1.0.0"
     },
-    "preview2": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease"
-      }
-    },
-    "preview3": {
-      "developmentClient": true
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "android": {
+      "package": "com.yourcompany.yourappname",
+      "versionCode": 1
+    }
   }
 }
