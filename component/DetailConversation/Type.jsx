@@ -75,7 +75,7 @@ const Type = memo(() => {
               <TextInput value={contentText} onChangeText={f} style={{borderRadius: 80, borderStyle: 'solid', borderColor: '#d9d9d9', borderWidth: 1, height: 40, padding: 10}} />
           </View>
           <View style={{display: "flex", justifyContent: "center", alignItems: 'center', flexDirection: 'row'}}>
-              <SendMessageVoice sendMessageTextToVoice={sendMessageTextToVoice} />
+              {/* <SendMessageVoice sendMessageTextToVoice={sendMessageTextToVoice} /> */}
               <SendMessage contentText={contentText} sendMessage={sendMessage} />
           </View>
           {

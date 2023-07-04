@@ -7,7 +7,7 @@ import {
   TextInput,
   Button,
   Platform,
-  LogBox
+  LogBox,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -40,14 +40,14 @@ import { URL_WEB } from "./config";
 import Signup from "./component/Signup/Signup";
 import search_user_by_phone from "./api/search_user_by_phone";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Tooltip from "react-native-walkthrough-tooltip";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-LogBox.ignoreLogs(["Require cycle:"])
+LogBox.ignoreLogs(["Require cycle:"]);
 
 export default function App() {
-
   return (
     <SocketContainer>
       <AuthContainer>
@@ -58,6 +58,8 @@ export default function App() {
 }
 
 const WrapApp = () => {
+  const [visibleTooltip, setVisibleTooltip] = useState(false);
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -265,24 +267,32 @@ const WrapApp = () => {
                     flexDirection: "row",
                   }}
                 >
-                  <Icons name={"call"} size={32} color={"#2e89ff"} />
-                  <TouchableHighlight
-                    style={{
-                      padding: Platform.OS === "ios" ? 0 : 10,
-                      marginLeft: 18,
-                    }}
+                  {/* <Icons name={"call"} size={32} color={"#2e89ff"} /> */}
+                  <Tooltip
+                    isVisible={visibleTooltip}
+                    content={<Text>Video call</Text>}
+                    placement="left"
+                    onClose={() => setVisibleTooltip(false)}
                   >
-                    <Icons3
-                      onPress={() =>
-                        Linking.openURL(
-                          URL_WEB + "/call" + "/" + route.params?.idConversation
-                        )
-                      }
-                      name={"video"}
-                      size={32}
-                      color={"#2e89ff"}
-                    />
-                  </TouchableHighlight>
+                    <TouchableHighlight
+                      style={{
+                        padding: Platform.OS === "ios" ? 0 : 10,
+                        marginLeft: 18,
+                      }}
+                    >
+                      <Icons3
+                        onLongPress={()=> setVisibleTooltip(true)}
+                        onPress={() =>
+                          Linking.openURL(
+                            URL_WEB + "/call" + "/" + route.params?.idConversation
+                          )
+                        }
+                        name={"video"}
+                        size={32}
+                        color={"#2e89ff"}
+                      />
+                    </TouchableHighlight>
+                  </Tooltip>
                 </View>
               ),
               headerBackVisible: false,
@@ -353,18 +363,30 @@ const TabNavigationContainer = () => {
           tabBarIcon: ({ focused, color, size }) => {
             if (route.name === "Chats") {
               if (focused === true) {
-                return <Icons2 name={"chat"} size={24} color={"#2e89ff"} />;
+                return <>
+                  <Icons2 name={"chat"} size={24} color={"#2e89ff"} />
+                  <Text style={{color: "#2e89ff"}}>Chat</Text>
+                </>;
               } else {
-                return <Icons2 name={"chat"} size={24} color={"#000"} />;
+                return <>
+                  <Icons2 name={"chat"} size={24} color={"#000"} />
+                  <Text style={{color: "#000"}}>Chat</Text>
+                </>;
               }
             } else if (route.name === "Contact") {
               if (focused === true) {
                 return (
-                  <Icons3 name={"user-friends"} size={24} color={"#2e89ff"} />
+                  <>
+                    <Icons3 name={"user-friends"} size={24} color={"#2e89ff"} />
+                    <Text style={{color: "#2e89ff"}}>Bạn bè</Text>
+                  </>
                 );
               } else {
                 return (
-                  <Icons3 name={"user-friends"} size={24} color={"#000"} />
+                  <>
+                    <Icons3 name={"user-friends"} size={24} color={"#000"} />
+                    <Text style={{color: "#000"}}>Bạn bè</Text>
+                  </>
                 );
               }
             }
@@ -379,11 +401,17 @@ const TabNavigationContainer = () => {
             else if (route.name === "Notifications") {
               if (focused === true) {
                 return (
-                  <Icons name={"notifications"} size={24} color={"#2e89ff"} />
+                  <>
+                    <Icons name={"notifications"} size={24} color={"#2e89ff"} />
+                    <Text style={{color: "#2e89ff"}}>Thông báo</Text>
+                  </>
                 );
               } else {
                 return (
-                  <Icons name={"notifications"} size={24} color={"#000"} />
+                  <>
+                    <Icons name={"notifications"} size={24} color={"#000"} />
+                    <Text style={{color: "#000"}}>Thông báo</Text>
+                  </>
                 );
               }
             } else if (route.name === "Me") {
